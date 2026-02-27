@@ -1,0 +1,27 @@
+<idea-plugin>
+    <id>com.github.aifolderpath</id>
+    <name>AI Folder Path</name>
+    <vendor>AIFolderPath</vendor>
+    <description><![CDATA[
+    Copy file/method/code path in AI-friendly format.
+    Select a class, method, or code snippet and press the shortcut to copy the reference path to clipboard.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="AIFolderPath.Notification" displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <action id="AIFolderPath.CopyAction"
+                class="com.github.aifolderpath.CopyAIPathAction"
+                text="Copy AI Path"
+                description="Copy file path in AI-friendly format">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt P"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>

@@ -1,0 +1,22 @@
+# AI tools
+.ace-tool/
+.claude/
+
+# Gradle
+.gradle/
+build/
+
+# IntelliJ
+.idea/
+.intellijPlatform/
+.kotlin/
+*.iml
+out/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Misc
+nul
