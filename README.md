@@ -7,7 +7,7 @@ IntelliJ IDEA 插件，将编辑器中选中的类名、方法名或代码片段
 | 场景 | 输出示例 |
 |------|----------|
 | 选中类名 / 光标在类名上 | `@module/src/main/java/com/example/UserService.java` |
-| 选中方法名 / 光标在方法名上 | `@module/src/main/java/com/example/UserService.java login` |
+| 选中方法名 / 光标在方法名上 | `@module/src/main/java/com/example/UserService.java login(String username, String password): boolean` |
 | 选中代码片段 | `@module/.../UserService.java login`<br>`42line    if (user == null) {`<br>`43line        throw new RuntimeException();`<br>`44line    }` |
 | Project 视图选中文件 | `@module/src/main/java/com/example/UserService.java` |
 
