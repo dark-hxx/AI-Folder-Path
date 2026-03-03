@@ -1,10 +1,15 @@
 # AI tools
 .ace-tool/
 .claude/
+.serena
 
 # Gradle
 .gradle/
 build/
+gradle
+gradle.properties
+gradlew
+gradlew.bat
 
 # IntelliJ
 .idea/

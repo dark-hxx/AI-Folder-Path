@@ -23,5 +23,12 @@
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
+        <action id="AIFolderPath.CopyRefAction"
+                class="com.github.aifolderpath.CopyAIRefAction"
+                text="Copy AI Ref Path"
+                description="Copy implementation/definition path in AI-friendly format">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt P"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
     </actions>
 </idea-plugin>
