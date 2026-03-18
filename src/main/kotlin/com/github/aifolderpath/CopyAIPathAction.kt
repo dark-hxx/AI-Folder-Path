@@ -65,9 +65,6 @@ class CopyAIPathAction : AnAction() {
             // 检查选中的是否是一个标识符（类名或方法名）
             if (isIdentifierSelection(selectedText, elementAtStart)) {
                 val resolvedElement = resolveIdentifier(elementAtStart)
-                when (resolvedElement) {
-                    is PsiMethod -> return "$basePath ${resolvedElement.name}"
-                    is PsiClass -> return basePath
                 return when (resolvedElement) {
                     is PsiMethod -> "$basePath ${buildMethodSignature(resolvedElement)}"
                     is PsiClass -> basePath
