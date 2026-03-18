@@ -65,30 +65,22 @@ class CopyAIPathAction : AnAction() {
             // 检查选中的是否是一个标识符（类名或方法名）
             if (isIdentifierSelection(selectedText, elementAtStart)) {
                 val resolvedElement = resolveIdentifier(elementAtStart)
-                return when (resolvedElement) {
-                    is PsiMethod -> "$basePath ${resolvedElement.name}"
-                    is PsiClass -> basePath
-                    else -> basePath
+                when (resolvedElement) {
+                    is PsiMethod -> return "$basePath ${resolvedElement.name}"
+                    is PsiClass -> return basePath
                 }
             }
 
-            // 选中的是代码片段
-            val containingMethod = findContainingMethod(elementAtStart)
-            val methodSuffix = if (containingMethod != null) " ${containingMethod.name}" else ""
+            // 选中的是代码片段或普通文本
+            val startLine = document.getLineNumber(startOffset) + 1
+            val endLine = document.getLineNumber(if (endOffset > startOffset) endOffset - 1 else endOffset) + 1
 
-            val startLine = document.getLineNumber(startOffset)
-            val endLine = document.getLineNumber(endOffset)
-
-            val sb = StringBuilder()
-            sb.append(basePath).append(methodSuffix)
-            for (line in startLine..endLine) {
-                val lineStart = document.getLineStartOffset(line)
-                val lineEnd = document.getLineEndOffset(line)
-                val lineText = document.getText(com.intellij.openapi.util.TextRange(lineStart, lineEnd))
-                val lineNum = line + 1  // 转为1-based行号
-                sb.append("\n${lineNum}line    $lineText")
+            return if (startLine == endLine) {
+                val trimmedSelectedText = selectedText.trim()
+                if (trimmedSelectedText.isEmpty()) basePath else "$basePath $trimmedSelectedText"
+            } else {
+                "$basePath lines $startLine-$endLine"
             }
-            return sb.toString()
         }
 
         // 无选区：基于光标位置
