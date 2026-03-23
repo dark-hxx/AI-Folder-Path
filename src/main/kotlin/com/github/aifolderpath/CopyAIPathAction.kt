@@ -8,6 +8,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ide.CopyPasteManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import java.awt.datatransfer.StringSelection
@@ -20,19 +21,23 @@ class CopyAIPathAction : AnAction() {
         log.info("AIFolderPath: actionPerformed triggered")
         val project = e.project ?: run { log.warn("AIFolderPath: project is null"); return }
         val editor = e.getData(CommonDataKeys.EDITOR)
-        val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: run { log.warn("AIFolderPath: psiFile is null"); return }
-        val virtualFile = psiFile.virtualFile ?: run { log.warn("AIFolderPath: virtualFile is null"); return }
-
-        val basePath = PathResolver.resolve(project, virtualFile)
-        log.info("AIFolderPath: basePath=$basePath")
-
-        val result: String = if (editor != null) {
-            buildFromEditor(editor, psiFile, basePath)
-        } else {
-            basePath
+        val selectedFile = getSelectedVirtualFile(e)
+        val psiFile = e.getData(CommonDataKeys.PSI_FILE)
+        val virtualFile = selectedFile ?: psiFile?.virtualFile ?: run {
+            log.warn("AIFolderPath: virtualFile is null")
+            return
         }
 
-        log.info("AIFolderPath: copying result=$result")
+        val result = when {
+            virtualFile.isDirectory -> PathResolver.resolveDirectory(project, virtualFile)
+            editor != null && psiFile != null -> {
+                val basePath = PathResolver.resolve(project, virtualFile)
+                buildFromEditor(editor, psiFile, basePath)
+            }
+            else -> PathResolver.resolve(project, virtualFile)
+        }
+        log.info("AIFolderPath: result=$result")
+
         CopyPasteManager.getInstance().setContents(StringSelection(result))
 
         // 气泡通知
@@ -44,6 +49,14 @@ class CopyAIPathAction : AnAction() {
         } catch (ex: Exception) {
             log.warn("AIFolderPath: notification failed", ex)
         }
+    }
+
+    private fun getSelectedVirtualFile(e: AnActionEvent): VirtualFile? {
+        val selectedFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+        if (!selectedFiles.isNullOrEmpty()) {
+            return selectedFiles.firstOrNull()
+        }
+        return e.getData(CommonDataKeys.VIRTUAL_FILE)
     }
 
     private fun buildFromEditor(
@@ -161,6 +174,7 @@ class CopyAIPathAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         val psiFile = e.getData(CommonDataKeys.PSI_FILE)
-        e.presentation.isEnabledAndVisible = psiFile != null
+        val selectedFile = getSelectedVirtualFile(e)
+        e.presentation.isEnabledAndVisible = psiFile != null || selectedFile != null
     }
 }

@@ -3,7 +3,6 @@ package com.github.aifolderpath
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import java.io.File
 
 object PathResolver {
 
@@ -11,23 +10,33 @@ object PathResolver {
      * 生成 AI 友好的路径格式: @模块名/模块内相对路径
      */
     fun resolve(project: Project, file: VirtualFile): String {
+        return buildPath(project, file, appendDirectorySeparator = false)
+    }
+
+    fun resolveDirectory(project: Project, directory: VirtualFile): String {
+        return buildPath(project, directory, appendDirectorySeparator = true)
+    }
+
+    private fun buildPath(project: Project, file: VirtualFile, appendDirectorySeparator: Boolean): String {
         val module = ModuleUtilCore.findModuleForFile(file, project)
-        val projectBasePath = project.basePath ?: return file.path
+        val projectBasePath = project.basePath ?: return finalizePath(file.path, appendDirectorySeparator)
 
         if (module != null) {
             val modulePath = findModuleRoot(file, projectBasePath)
             if (modulePath != null) {
                 val moduleRelPath = modulePath.removePrefix(projectBasePath).trimStart('/', '\\')
-                val fileRelPath = file.path.removePrefix(modulePath).trimStart('/', '\\')
-                val moduleName = moduleRelPath.replace('\\', '/')
-                return "@$moduleName/$fileRelPath"
+                val relPath = file.path.removePrefix(modulePath).trimStart('/', '\\').replace('\\', '/')
+                val moduleName = moduleRelPath.replace('\\', '/').ifEmpty { project.name }
+                val path = if (relPath.isEmpty()) "@$moduleName" else "@$moduleName/$relPath"
+                return finalizePath(path, appendDirectorySeparator)
             }
         }
 
         // 单模块回退: @项目名/相对路径
         val projectName = project.name
-        val relPath = file.path.removePrefix(projectBasePath).trimStart('/', '\\')
-        return "@$projectName/${relPath.replace('\\', '/')}"
+        val relPath = file.path.removePrefix(projectBasePath).trimStart('/', '\\').replace('\\', '/')
+        val path = if (relPath.isEmpty()) "@$projectName" else "@$projectName/$relPath"
+        return finalizePath(path, appendDirectorySeparator)
     }
 
     /**
@@ -35,7 +44,7 @@ object PathResolver {
      * 但不超过项目根目录
      */
     private fun findModuleRoot(file: VirtualFile, projectBasePath: String): String? {
-        var dir = file.parent
+        var dir = if (file.isDirectory) file else file.parent
         val normalizedBase = projectBasePath.replace('\\', '/')
         while (dir != null) {
             val dirPath = dir.path.replace('\\', '/')
@@ -48,6 +57,15 @@ object PathResolver {
             dir = dir.parent
         }
         return null
+    }
+
+    private fun finalizePath(path: String, appendDirectorySeparator: Boolean): String {
+        val normalizedPath = path.replace('\\', '/')
+        return if (appendDirectorySeparator) {
+            "${normalizedPath.trimEnd('/', '\\')}\\"
+        } else {
+            normalizedPath
+        }
     }
 
     private fun hasModuleMarker(dir: VirtualFile): Boolean {
