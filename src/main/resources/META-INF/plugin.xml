@@ -3,9 +3,22 @@
     <name>AI Folder Path</name>
     <vendor>AIFolderPath</vendor>
     <description><![CDATA[
-    在编辑器或项目视图中，一键复制文件、目录、类、方法或代码片段的 AI 友好引用路径。支持 Maven/Gradle 多模块项目路径解析，适合粘贴到 Claude、Cursor、Copilot Chat 等 AI IDE / AI 助手中，帮助快速定位上下文与源码位置。
-
-    Copy files, directories, classes, methods, or code snippets from the editor or project view in an AI-friendly reference format. Supports Maven/Gradle multi-module path resolution and is designed for pasting precise code context into Claude, Cursor, Copilot Chat, and other AI IDEs or coding assistants.
+    <p><b>中文</b></p>
+    <ul>
+      <li>在编辑器或项目视图中，一键复制 AI 友好引用路径</li>
+      <li>支持文件、目录、类、方法和代码片段</li>
+      <li>支持 Maven / Gradle 多模块项目路径解析</li>
+      <li>适合粘贴到 Claude、Cursor、Copilot Chat 等 AI IDE / AI 助手</li>
+      <li>帮助快速定位上下文与源码位置</li>
+    </ul>
+    <p><b>English</b></p>
+    <ul>
+      <li>Copy AI-friendly reference paths from the editor or project view</li>
+      <li>Supports files, directories, classes, methods, and code snippets</li>
+      <li>Supports Maven / Gradle multi-module path resolution</li>
+      <li>Designed for Claude, Cursor, Copilot Chat, and other AI IDEs / coding assistants</li>
+      <li>Helps locate code context and source positions quickly</li>
+    </ul>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
