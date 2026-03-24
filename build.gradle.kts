@@ -33,6 +33,7 @@ intellijPlatform {
         name = "AI Folder Path"
         version = project.version.toString()
         description = """
+            <p>Copy AI-friendly reference paths for files, directories, classes, methods, and code snippets in IntelliJ IDEA.</p>
             <p><b>中文</b></p>
             <ul>
               <li>在编辑器或项目视图中，一键复制 AI 友好引用路径</li>
@@ -52,7 +53,6 @@ intellijPlatform {
         """.trimIndent()
         ideaVersion {
             sinceBuild = "251"
-            untilBuild = "999.*"
         }
         vendor {
             name = "AIFolderPath"
