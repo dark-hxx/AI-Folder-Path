@@ -78,10 +78,9 @@ class CopyAIPathAction : AnAction() {
             // 检查选中的是否是一个标识符（类名或方法名）
             if (isIdentifierSelection(selectedText, elementAtStart)) {
                 val resolvedElement = resolveIdentifier(elementAtStart)
-                return when (resolvedElement) {
-                    is PsiMethod -> "$basePath ${buildMethodSignature(resolvedElement)}"
-                    is PsiClass -> basePath
-                    else -> basePath
+                when (resolvedElement) {
+                    is PsiMethod -> return "$basePath ${buildMethodSignature(resolvedElement)}"
+                    is PsiClass -> return basePath
                 }
             }
 
@@ -89,8 +88,10 @@ class CopyAIPathAction : AnAction() {
             val startLine = document.getLineNumber(startOffset) + 1
             val endLine = document.getLineNumber(if (endOffset > startOffset) endOffset - 1 else endOffset) + 1
 
-            return if (startLine == endLine) {
-                val trimmedSelectedText = selectedText.trim()
+            val trimmedSelectedText = selectedText.trim()
+            val selectedLineCount = endLine - startLine + 1
+
+            return if (selectedLineCount <= 2) {
                 if (trimmedSelectedText.isEmpty()) basePath else "$basePath $trimmedSelectedText"
             } else {
                 "$basePath lines $startLine-$endLine"
