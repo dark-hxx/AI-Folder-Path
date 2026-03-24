@@ -2,6 +2,7 @@
 .ace-tool/
 .claude/
 .serena
+.worktrees/
 
 # Gradle
 .gradle/
