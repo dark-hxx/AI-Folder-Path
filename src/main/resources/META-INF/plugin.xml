@@ -27,6 +27,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="AIFolderPath.Notification" displayType="BALLOON"/>
+        <applicationConfigurable
+                parentId="tools"
+                id="com.github.aifolderpath.settings.shortcuts"
+                instance="com.github.aifolderpath.settings.ShortcutSettingsConfigurable"
+                displayName="AI Folder Path"/>
     </extensions>
 
     <actions>
