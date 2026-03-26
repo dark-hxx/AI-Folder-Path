@@ -3,6 +3,8 @@
 .claude/
 .serena
 .worktrees/
+.superpowers/
+docs/
 
 # Gradle
 .gradle/
