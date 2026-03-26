@@ -55,6 +55,7 @@ intellijPlatform {
         """.trimIndent()
         ideaVersion {
             sinceBuild = "251"
+            untilBuild = "252.*"
         }
         vendor {
             name = "AIFolderPath"
