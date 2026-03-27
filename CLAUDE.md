@@ -86,6 +86,9 @@ AIFolderPath/
 - `CopyAIPathAction.buildFromEditor()` 的标识符 vs 代码片段判断
 - `isIdentifierSelection()` 的边界用例
 
+## 强制规范
+- 代码编写完成后默认**不执行 Maven 测试**；仅在用户明确要求，或当前问题必须依赖 Maven 测试/构建结果验证时再执行
+
 ## 编码规范
 
 - 语言：Kotlin
