@@ -2,6 +2,8 @@ package com.github.aifolderpath
 
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 
 object PathResolver {
@@ -22,12 +24,20 @@ object PathResolver {
         val projectBasePath = project.basePath ?: return finalizePath(file.path, appendDirectorySeparator)
 
         if (module != null) {
+            val moduleRoot = ModuleRootManager.getInstance(module).contentRoots
+                .filter { VfsUtilCore.isAncestor(it, file, false) || it == file }
+                .maxByOrNull { it.path.length }
+
+            if (moduleRoot != null) {
+                val relPath = VfsUtilCore.getRelativePath(file, moduleRoot, '/')
+                val path = if (relPath.isNullOrEmpty()) "@${module.name}" else "@${module.name}/$relPath"
+                return finalizePath(path, appendDirectorySeparator)
+            }
+
             val modulePath = findModuleRoot(file, projectBasePath)
             if (modulePath != null) {
-                val moduleRelPath = modulePath.removePrefix(projectBasePath).trimStart('/', '\\')
                 val relPath = file.path.removePrefix(modulePath).trimStart('/', '\\').replace('\\', '/')
-                val moduleName = moduleRelPath.replace('\\', '/').ifEmpty { project.name }
-                val path = if (relPath.isEmpty()) "@$moduleName" else "@$moduleName/$relPath"
+                val path = if (relPath.isEmpty()) "@${module.name}" else "@${module.name}/$relPath"
                 return finalizePath(path, appendDirectorySeparator)
             }
         }
