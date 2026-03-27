@@ -21,14 +21,15 @@ class CopyAIPathAction : AnAction() {
         log.info("AIFolderPath: actionPerformed triggered")
         val project = e.project ?: run { log.warn("AIFolderPath: project is null"); return }
         val editor = e.getData(CommonDataKeys.EDITOR)
-        val selectedFile = getSelectedVirtualFile(e)
+        val selectedFiles = getSelectedVirtualFiles(e)
         val psiFile = e.getData(CommonDataKeys.PSI_FILE)
-        val virtualFile = selectedFile ?: psiFile?.virtualFile ?: run {
+        val virtualFile = selectedFiles.firstOrNull() ?: psiFile?.virtualFile ?: run {
             log.warn("AIFolderPath: virtualFile is null")
             return
         }
 
         val result = when {
+            selectedFiles.size > 1 -> formatSelectedPaths(project, selectedFiles)
             virtualFile.isDirectory -> PathResolver.resolveDirectory(project, virtualFile)
             editor != null && psiFile != null -> {
                 val basePath = PathResolver.resolve(project, virtualFile)
@@ -51,12 +52,27 @@ class CopyAIPathAction : AnAction() {
         }
     }
 
-    private fun getSelectedVirtualFile(e: AnActionEvent): VirtualFile? {
+    private fun getSelectedVirtualFiles(e: AnActionEvent): List<VirtualFile> {
         val selectedFiles = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
         if (!selectedFiles.isNullOrEmpty()) {
-            return selectedFiles.firstOrNull()
+            return selectedFiles.toList()
         }
-        return e.getData(CommonDataKeys.VIRTUAL_FILE)
+        return e.getData(CommonDataKeys.VIRTUAL_FILE)?.let(::listOf).orEmpty()
+    }
+
+    private fun formatSelectedPaths(
+        project: com.intellij.openapi.project.Project,
+        selectedFiles: List<VirtualFile>,
+    ): String {
+        return selectedFiles
+            .distinctBy { it.path }
+            .joinToString("\n") { file ->
+                if (file.isDirectory) {
+                    PathResolver.resolveDirectory(project, file)
+                } else {
+                    PathResolver.resolve(project, file)
+                }
+            }
     }
 
     private fun buildFromEditor(
@@ -175,7 +191,7 @@ class CopyAIPathAction : AnAction() {
 
     override fun update(e: AnActionEvent) {
         val psiFile = e.getData(CommonDataKeys.PSI_FILE)
-        val selectedFile = getSelectedVirtualFile(e)
-        e.presentation.isEnabledAndVisible = psiFile != null || selectedFile != null
+        val selectedFiles = getSelectedVirtualFiles(e)
+        e.presentation.isEnabledAndVisible = psiFile != null || selectedFiles.isNotEmpty()
     }
 }

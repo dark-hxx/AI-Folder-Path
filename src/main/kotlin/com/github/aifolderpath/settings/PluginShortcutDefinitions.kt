@@ -14,19 +14,19 @@ data class ShortcutActionDefinition(
 }
 
 object PluginShortcutDefinitions {
-    val copyAiPath = ShortcutActionDefinition(
-        actionId = "AIFolderPath.CopyAction",
-        label = "Copy AI Path",
+    val copyAi = ShortcutActionDefinition(
+        actionId = "AIFolderPath.CopyOptionsAction",
+        label = "Copy AI",
         defaultShortcut = KeyboardShortcut(KeyStroke.getKeyStroke("alt P"), null),
-        description = "编辑器 / 项目视图复制 AI 路径",
+        description = "按当前 Alt+P 默认动作复制 AI 锚点或上下文",
     )
 
-    val copyAiRefPath = ShortcutActionDefinition(
+    val copyAiUsages = ShortcutActionDefinition(
         actionId = "AIFolderPath.CopyRefAction",
-        label = "Copy AI Ref Path",
+        label = "Copy AI Usages",
         defaultShortcut = KeyboardShortcut(KeyStroke.getKeyStroke("ctrl alt P"), null),
-        description = "复制实现 / 定义引用路径",
+        description = "复制定义和前 10 个 usages",
     )
 
-    val all = listOf(copyAiPath, copyAiRefPath)
+    val all = listOf(copyAi, copyAiUsages)
 }

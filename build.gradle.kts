@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.aifolderpath"
-version = "1.0.4"
+version = "1.0.5"
 
 repositories {
     mavenCentral()
@@ -35,22 +35,22 @@ intellijPlatform {
         name = "AI Folder Path"
         version = project.version.toString()
         description = """
-            <p>Copy AI-friendly reference paths for files, directories, classes, methods, and code snippets in IntelliJ IDEA.</p>
+            <p>Copy AI-ready paths, symbol anchors, context blocks, usages, and project trees from IntelliJ IDEA.</p>
             <p><b>中文</b></p>
             <ul>
-              <li>在编辑器或项目视图中，一键复制 AI 友好引用路径</li>
-              <li>支持文件、目录、类、方法和代码片段</li>
-              <li>支持 Maven / Gradle 多模块项目路径解析</li>
-              <li>适合粘贴到 Claude、Cursor、Copilot Chat 等 AI IDE / AI 助手</li>
-              <li>帮助快速定位上下文与源码位置</li>
+              <li>支持 Copy AI / Path / Anchor / Context / Usages / Tree 多种 AI 友好输出</li>
+              <li>Alt+P 在编辑器默认复制符号锚点，在项目视图自动回退为路径复制</li>
+              <li>支持文件、目录、多选路径、目录树、类、方法、代码选区与调用点列表</li>
+              <li>支持 Maven / Gradle 多模块路径解析，适合 Claude、Cursor、Copilot Chat 等 AI 编程工具</li>
+              <li>内置快捷键设置页，可配置 Copy AI 与 Copy AI Usages，并自动处理只读 Keymap 副本</li>
             </ul>
             <p><b>English</b></p>
             <ul>
-              <li>Copy AI-friendly reference paths from the editor or project view</li>
-              <li>Supports files, directories, classes, methods, and code snippets</li>
-              <li>Supports Maven / Gradle multi-module path resolution</li>
-              <li>Designed for Claude, Cursor, Copilot Chat, and other AI IDEs / coding assistants</li>
-              <li>Helps locate code context and source positions quickly</li>
+              <li>Supports Copy AI / Path / Anchor / Context / Usages / Tree for AI-ready code references</li>
+              <li>Alt+P copies a symbol anchor in the editor and falls back to path copy in the Project view</li>
+              <li>Handles files, directories, multi-selection paths, directory trees, classes, methods, selections, and call-site lists</li>
+              <li>Resolves Maven / Gradle multi-module paths for Claude, Cursor, Copilot Chat, and other AI coding tools</li>
+              <li>Includes a built-in shortcut settings page for Copy AI and Copy AI Usages, with read-only keymap duplication support</li>
             </ul>
         """.trimIndent()
         ideaVersion {
